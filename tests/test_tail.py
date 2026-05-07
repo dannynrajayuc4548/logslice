@@ -7,6 +7,7 @@ from logslice.tail import tail, stream_live
 
 
 def _write_lines(path: str, lines, delay: float = 0.0) -> None:
+    """Append *lines* to *path*, optionally waiting *delay* seconds first."""
     if delay:
         time.sleep(delay)
     with open(path, "a", encoding="utf-8") as fh:
@@ -20,6 +21,13 @@ class TestTailHelper:
         log.write_text("x\ny\n", encoding="utf-8")
         result = tail(str(log), n=5, from_start=True)
         assert isinstance(result, list)
+
+    def test_from_start_true_returns_all_lines(self, tmp_path):
+        """When from_start=True all existing lines should be returned."""
+        log = tmp_path / "all.log"
+        log.write_text("a\nb\nc\n", encoding="utf-8")
+        result = tail(str(log), n=10, from_start=True)
+        assert result == ["a", "b", "c"]
 
     def test_from_start_false_catches_new_lines(self, tmp_path):
         log = tmp_path / "t.log"

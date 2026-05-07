@@ -51,6 +51,15 @@ class TestTailHelper:
         result = tail(str(log), n=5, from_start=True)
         assert result == []
 
+    def test_n_limits_returned_lines(self, tmp_path):
+        """When from_start=True, at most *n* lines should be returned."""
+        log = tmp_path / "many.log"
+        log.write_text("\n".join(str(i) for i in range(20)) + "\n", encoding="utf-8")
+        result = tail(str(log), n=5, from_start=True)
+        assert len(result) == 5
+        # Should be the last 5 lines
+        assert result == [str(i) for i in range(15, 20)]
+
 
 class TestStreamLive:
     def test_stream_live_yields_new_entries(self, tmp_path):

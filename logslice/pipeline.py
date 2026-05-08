@@ -1,69 +1,91 @@
-"""Pipeline: chain filters, a formatter, and a writer into a single pass."""
+"""LogPipeline: fluent end-to-end log processing pipeline."""
 
-from __future__ import annotations
+from typing import Any, Dict, Iterable, Iterator, List, Optional
 
-from typing import Iterable, List, Optional
-
-from .filters import BaseFilter
-from .formatters import BaseFormatter, PlainFormatter
-from .parser import LogParser
-from .writer import LogWriter
+from logslice.enricher import LogEnricher
+from logslice.filters import BaseFilter, RegexFilter, TimeRangeFilter
+from logslice.formatters import BaseFormatter
+from logslice.parser import LogParser
 
 
 class LogPipeline:
-    """High-level helper that wires a parser, filters, formatter, and writer.
+    """Fluent builder that chains parsing → filtering → enrichment → formatting.
 
     Example::
 
-        pipeline = LogPipeline()
-        pipeline.add_filter(RegexFilter("error"))
-        pipeline.set_formatter(JSONFormatter())
-        results = pipeline.run_file("app.log")
+        results = (
+            LogPipeline("app.log")
+            .add_filter(RegexFilter("error"))
+            .enrich("env", "prod")
+            .set_formatter(JSONFormatter())
+            .run()
+        )
     """
 
-    def __init__(
-        self,
-        formatter: Optional[BaseFormatter] = None,
-        writer: Optional[LogWriter] = None,
-    ) -> None:
+    def __init__(self, path: str) -> None:
+        self._path = path
         self._filters: List[BaseFilter] = []
-        self._formatter: BaseFormatter = formatter or PlainFormatter()
-        self._writer: LogWriter = writer or LogWriter(formatter=self._formatter)
+        self._formatter: Optional[BaseFormatter] = None
+        self._enricher: LogEnricher = LogEnricher()
+        self._field: str = "message"
 
     # ------------------------------------------------------------------
-    # Configuration helpers
+    # Builder methods
     # ------------------------------------------------------------------
 
     def add_filter(self, f: BaseFilter) -> "LogPipeline":
-        """Append a filter and return *self* for chaining."""
+        """Append a filter; returns *self* for chaining."""
         self._filters.append(f)
         return self
 
     def set_formatter(self, formatter: BaseFormatter) -> "LogPipeline":
-        """Replace the current formatter (also updates the writer)."""
+        """Set the output formatter; returns *self* for chaining."""
         self._formatter = formatter
-        self._writer = LogWriter(formatter=formatter)
+        return self
+
+    def enrich(self, key: str, value: Any) -> "LogPipeline":
+        """Register an enrichment rule; returns *self* for chaining."""
+        self._enricher.add(key, value)
+        return self
+
+    def set_field(self, field: str) -> "LogPipeline":
+        """Set the default field used by filters (default: 'message')."""
+        self._field = field
         return self
 
     # ------------------------------------------------------------------
-    # Execution
+    # Internals
     # ------------------------------------------------------------------
 
     def _build_parser(self) -> LogParser:
-        parser = LogParser()
+        parser = LogParser(self._path)
         for f in self._filters:
             parser.add_filter(f)
         return parser
 
-    def run(self, lines: Iterable[str]) -> List[str]:
-        """Process an iterable of raw log lines and return formatted strings."""
+    def _iter_entries(self) -> Iterator[Dict[str, Any]]:
         parser = self._build_parser()
-        entries = list(parser.stream(lines))
-        for entry in entries:
-            self._writer.write(entry)
-        return self._writer.collect()
+        for entry in parser.stream():
+            yield self._enricher.apply(entry)
 
-    def run_file(self, path: str) -> List[str]:
-        """Open *path*, run the pipeline, and return formatted strings."""
-        with open(path, "r", encoding="utf-8") as fh:
-            return self.run(fh)
+    # ------------------------------------------------------------------
+    # Terminal operations
+    # ------------------------------------------------------------------
+
+    def run(self) -> List[Any]:
+        """Collect all processed entries into a list."""
+        results = []
+        for entry in self._iter_entries():
+            if self._formatter:
+                results.append(self._formatter.format(entry))
+            else:
+                results.append(entry)
+        return results
+
+    def stream(self) -> Iterator[Any]:
+        """Lazily yield processed entries."""
+        for entry in self._iter_entries():
+            if self._formatter:
+                yield self._formatter.format(entry)
+            else:
+                yield entry

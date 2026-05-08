@@ -1,36 +1,44 @@
 """logslice — Lightweight library for filtering and streaming structured logs."""
 
-from logslice.filters import RegexFilter, TimeRangeFilter
-from logslice.parser import LogParser
-from logslice.formatters import JSONFormatter, PlainFormatter
-from logslice.writer import LogWriter
 from logslice.aggregator import LogAggregator
-from logslice.summary import LogSummary
-from logslice.pipeline import LogPipeline
-from logslice.exporter import LogExporter
-from logslice.watcher import LogWatcher
-from logslice.tail import tail, stream_live
-from logslice.sampler import LogSampler
-from logslice.router import LogRouter
-from logslice.dispatch import LogDispatcher
 from logslice.deduplicator import LogDeduplicator
+from logslice.dispatch import LogDispatcher
+from logslice.enricher import LogEnricher
+from logslice.exporter import LogExporter
+from logslice.filters import BaseFilter, RegexFilter, TimeRangeFilter
+from logslice.formatters import BaseFormatter, JSONFormatter, PlainFormatter
+from logslice.parser import LogParser
+from logslice.pipeline import LogPipeline
+from logslice.ratelimiter import LogRateLimiter
+from logslice.router import LogRouter
+from logslice.sampler import LogSampler
+from logslice.summary import LogSummary
+from logslice.tail import stream_live, tail
+from logslice.transformer import LogTransformer
+from logslice.watcher import LogWatcher
+from logslice.writer import LogWriter
 
 __all__ = [
+    "LogAggregator",
+    "LogDeduplicator",
+    "LogDispatcher",
+    "LogEnricher",
+    "LogExporter",
+    "BaseFilter",
     "RegexFilter",
     "TimeRangeFilter",
-    "LogParser",
+    "BaseFormatter",
     "JSONFormatter",
     "PlainFormatter",
-    "LogWriter",
-    "LogAggregator",
-    "LogSummary",
+    "LogParser",
     "LogPipeline",
-    "LogExporter",
-    "LogWatcher",
-    "tail",
-    "stream_live",
-    "LogSampler",
+    "LogRateLimiter",
     "LogRouter",
-    "LogDispatcher",
-    "LogDeduplicator",
+    "LogSampler",
+    "LogSummary",
+    "stream_live",
+    "tail",
+    "LogTransformer",
+    "LogWatcher",
+    "LogWriter",
 ]

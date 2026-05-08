@@ -36,5 +36,23 @@ class LogSummary:
             lines.append(f"  {str(key):<20} {count:>6}  ({pct:.1f}%)")
         return "\n".join(lines)
 
+    def as_csv(self, include_header: bool = True) -> str:
+        """Return a CSV-formatted string of group counts and percentages.
+
+        Args:
+            include_header: Whether to include a header row. Defaults to True.
+
+        Returns:
+            A string with one row per group, sorted by count descending.
+        """
+        data = self.as_dict()
+        lines: List[str] = []
+        if include_header:
+            lines.append("group,count,percent")
+        for key, count in sorted(data["groups"].items(), key=lambda x: x[1], reverse=True):
+            pct = (count / data["total"] * 100) if data["total"] else 0
+            lines.append(f"{str(key)},{count},{pct:.1f}")
+        return "\n".join(lines)
+
     def __repr__(self) -> str:  # pragma: no cover
         return f"LogSummary(groups={list(self.aggregator.counts().keys())})"

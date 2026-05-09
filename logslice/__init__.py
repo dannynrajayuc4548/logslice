@@ -1,7 +1,7 @@
-"""logslice — Lightweight Python library for filtering and streaming structured log files."""
+"""logslice – Lightweight Python library for filtering and streaming structured log files."""
 
-from logslice.parser import LogParser
 from logslice.filters import BaseFilter, RegexFilter, TimeRangeFilter
+from logslice.parser import LogParser
 from logslice.formatters import BaseFormatter, JSONFormatter, PlainFormatter
 from logslice.writer import LogWriter
 from logslice.aggregator import LogAggregator
@@ -26,20 +26,26 @@ from logslice.checkpoint import LogCheckpoint
 from logslice.resume import stream_from_checkpoint
 from logslice.replayer import LogReplayer
 from logslice.replay_pipeline import ReplayPipeline
-from logslice.alerter import LogAlerter
+from logslice.alerter import LogAlerter, Alert
 from logslice.alert_pipeline import AlertPipeline
+from logslice.correlator import LogCorrelator
 
 __all__ = [
+    "BaseFilter",
+    "RegexFilter",
+    "TimeRangeFilter",
     "LogParser",
-    "BaseFilter", "RegexFilter", "TimeRangeFilter",
-    "BaseFormatter", "JSONFormatter", "PlainFormatter",
+    "BaseFormatter",
+    "JSONFormatter",
+    "PlainFormatter",
     "LogWriter",
     "LogAggregator",
     "LogSummary",
     "LogPipeline",
     "LogExporter",
     "LogWatcher",
-    "tail", "stream_live",
+    "tail",
+    "stream_live",
     "LogSampler",
     "LogRouter",
     "LogDispatcher",
@@ -50,12 +56,16 @@ __all__ = [
     "LogRedactor",
     "LogSplitter",
     "LogMerger",
-    "LogValidator", "ValidationError",
-    "standard_schema", "minimal_schema",
+    "LogValidator",
+    "ValidationError",
+    "standard_schema",
+    "minimal_schema",
     "LogCheckpoint",
     "stream_from_checkpoint",
     "LogReplayer",
     "ReplayPipeline",
     "LogAlerter",
+    "Alert",
     "AlertPipeline",
+    "LogCorrelator",
 ]

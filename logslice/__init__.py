@@ -1,8 +1,8 @@
-"""logslice – Lightweight Python library for filtering and streaming structured log files."""
+"""logslice — Lightweight Python library for filtering and streaming structured log files."""
 
-from logslice.filters import BaseFilter, RegexFilter, TimeRangeFilter
 from logslice.parser import LogParser
-from logslice.formatters import BaseFormatter, JSONFormatter, PlainFormatter
+from logslice.filters import RegexFilter, TimeRangeFilter
+from logslice.formatters import JSONFormatter, PlainFormatter
 from logslice.writer import LogWriter
 from logslice.aggregator import LogAggregator
 from logslice.summary import LogSummary
@@ -29,13 +29,13 @@ from logslice.replay_pipeline import ReplayPipeline
 from logslice.alerter import LogAlerter, Alert
 from logslice.alert_pipeline import AlertPipeline
 from logslice.correlator import LogCorrelator
+from logslice.throttle import LogThrottle
+from logslice.archiver import LogArchiver
 
 __all__ = [
-    "BaseFilter",
+    "LogParser",
     "RegexFilter",
     "TimeRangeFilter",
-    "LogParser",
-    "BaseFormatter",
     "JSONFormatter",
     "PlainFormatter",
     "LogWriter",
@@ -68,4 +68,6 @@ __all__ = [
     "Alert",
     "AlertPipeline",
     "LogCorrelator",
+    "LogThrottle",
+    "LogArchiver",
 ]

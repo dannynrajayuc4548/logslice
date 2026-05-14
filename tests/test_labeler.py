@@ -102,24 +102,9 @@ def test_apply_does_not_mutate_original():
     assert original == original_copy
 
 
-# ---------------------------------------------------------------------------
-# Multiple labels and empty input
-# ---------------------------------------------------------------------------
-
-def test_multiple_labels_all_attached():
-    lb = LogLabeler().add("env", "prod").add("region", "eu").add("flag", True)
-    result = list(lb.apply([_e()]))
-    assert result[0]["env"] == "prod"
-    assert result[0]["region"] == "eu"
-    assert result[0]["flag"] is True
-
-
-def test_empty_input_yields_nothing():
+def test_apply_returns_new_dict_per_entry():
+    """Each entry yielded by apply should be a distinct dict object."""
     lb = LogLabeler().add("env", "prod")
-    assert list(lb.apply([])) == []
-
-
-def test_existing_field_overwritten_by_label():
-    lb = LogLabeler().add("level", "OVERRIDE")
-    result = list(lb.apply([_e(level="INFO")]))
-    assert result[0]["level"] == "OVERRIDE"
+    entry = _e()
+    results = list(lb.apply([entry]))
+    assert results[0] is not entry

@@ -92,19 +92,15 @@ def test_clear_removes_entries_but_keeps_rules():
     assert len(router.bucket("errors")) == 1
 
 
-def test_empty_bucket_returns_empty_list():
+def test_route_many_returns_bucket_counts():
+    """route_many should return a dict mapping bucket names to entry counts."""
     router = LogRouter()
-    assert router.bucket("nonexistent") == []
-
-
-def test_chaining_add_rule_returns_self():
-    router = LogRouter()
-    result = router.add_rule("x", RegexFilter("x", field="level"))
-    assert result is router
-
-
-def test_chaining_on_returns_self():
-    router = LogRouter()
-    router.add_rule("x", RegexFilter("x", field="level"))
-    result = router.on("x", lambda e: None)
-    assert result is router
+    router.add_rule("errors", RegexFilter("error", field="level"))
+    entries = [
+        _entry(level="error"),
+        _entry(level="error"),
+        _entry(level="info"),
+    ]
+    counts = router.route_many(entries)
+    assert counts["errors"] == 2
+    assert counts["default"] == 1

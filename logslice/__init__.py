@@ -1,4 +1,4 @@
-"""logslice — Lightweight Python library for filtering and streaming structured log files."""
+"""logslice – Lightweight Python library for filtering and streaming structured log files."""
 
 from .parser import LogParser
 from .filters import RegexFilter, TimeRangeFilter
@@ -46,6 +46,8 @@ from .profile_pipeline import ProfilePipeline
 from .compressor import LogCompressor
 from .highlighter import LogHighlighter
 from .highlight_pipeline import HighlightPipeline
+from .annotator import LogAnnotator
+from .annotate_pipeline import AnnotatePipeline
 
 __all__ = [
     "LogParser",
@@ -101,4 +103,6 @@ __all__ = [
     "LogCompressor",
     "LogHighlighter",
     "HighlightPipeline",
+    "LogAnnotator",
+    "AnnotatePipeline",
 ]

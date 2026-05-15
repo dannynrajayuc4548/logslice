@@ -1,36 +1,51 @@
 """logslice — Lightweight Python library for filtering and streaming structured log files."""
 
-from logslice.parser import LogParser
-from logslice.filters import RegexFilter, TimeRangeFilter
-from logslice.formatters import JSONFormatter, PlainFormatter
-from logslice.writer import LogWriter
-from logslice.aggregator import LogAggregator
-from logslice.summary import LogSummary
-from logslice.pipeline import LogPipeline
-from logslice.exporter import LogExporter
-from logslice.watcher import LogWatcher
-from logslice.tail import tail, stream_live
-from logslice.sampler import LogSampler
-from logslice.router import LogRouter
-from logslice.dispatch import LogDispatcher
-from logslice.deduplicator import LogDeduplicator
-from logslice.ratelimiter import LogRateLimiter
-from logslice.transformer import LogTransformer
-from logslice.enricher import LogEnricher
-from logslice.redactor import LogRedactor
-from logslice.splitter import LogSplitter
-from logslice.merger import LogMerger
-from logslice.validator import LogValidator, ValidationError
-from logslice.schema import standard_schema, minimal_schema
-from logslice.checkpoint import LogCheckpoint
-from logslice.resume import stream_from_checkpoint
-from logslice.replayer import LogReplayer
-from logslice.replay_pipeline import ReplayPipeline
-from logslice.alerter import LogAlerter, Alert
-from logslice.alert_pipeline import AlertPipeline
-from logslice.correlator import LogCorrelator
-from logslice.throttle import LogThrottle
-from logslice.archiver import LogArchiver
+from .parser import LogParser
+from .filters import RegexFilter, TimeRangeFilter
+from .formatters import JSONFormatter, PlainFormatter
+from .writer import LogWriter
+from .aggregator import LogAggregator
+from .summary import LogSummary
+from .pipeline import LogPipeline
+from .exporter import LogExporter
+from .watcher import LogWatcher
+from .tail import tail, stream_live
+from .sampler import LogSampler
+from .router import LogRouter
+from .dispatch import LogDispatcher
+from .deduplicator import LogDeduplicator
+from .ratelimiter import LogRateLimiter
+from .transformer import LogTransformer
+from .enricher import LogEnricher
+from .redactor import LogRedactor
+from .splitter import LogSplitter
+from .merger import LogMerger
+from .validator import LogValidator, ValidationError
+from .schema import standard_schema, minimal_schema
+from .checkpoint import LogCheckpoint
+from .resume import stream_from_checkpoint
+from .replayer import LogReplayer
+from .replay_pipeline import ReplayPipeline
+from .alerter import LogAlerter, Alert
+from .alert_pipeline import AlertPipeline
+from .correlator import LogCorrelator
+from .throttle import LogThrottle
+from .archiver import LogArchiver
+from .buffer import LogBuffer, BufferFullError
+from .tagger import LogTagger
+from .tag_pipeline import TagPipeline
+from .counter import LogCounter
+from .scorer import LogScorer
+from .labeler import LogLabeler
+from .classifier import LogClassifier
+from .classify_pipeline import ClassifyPipeline
+from .normalizer import LogNormalizer
+from .normalize_pipeline import NormalizePipeline
+from .profiler import LogProfiler
+from .profile_pipeline import ProfilePipeline
+from .compressor import LogCompressor
+from .highlighter import LogHighlighter
+from .highlight_pipeline import HighlightPipeline
 
 __all__ = [
     "LogParser",
@@ -70,4 +85,20 @@ __all__ = [
     "LogCorrelator",
     "LogThrottle",
     "LogArchiver",
+    "LogBuffer",
+    "BufferFullError",
+    "LogTagger",
+    "TagPipeline",
+    "LogCounter",
+    "LogScorer",
+    "LogLabeler",
+    "LogClassifier",
+    "ClassifyPipeline",
+    "LogNormalizer",
+    "NormalizePipeline",
+    "LogProfiler",
+    "ProfilePipeline",
+    "LogCompressor",
+    "LogHighlighter",
+    "HighlightPipeline",
 ]

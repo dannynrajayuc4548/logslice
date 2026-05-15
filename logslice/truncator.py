@@ -53,6 +53,18 @@ class LogTruncator:
             self._fields.append(field)
         return self
 
+    def remove_field(self, field: str) -> "LogTruncator":
+        """Unregister *field* so it is no longer truncated.
+
+        Returns *self* for chaining.  Raises ``KeyError`` if *field* has
+        not been registered.
+        """
+        field = field.strip()
+        if field not in self._fields:
+            raise KeyError(f"field {field!r} is not registered")
+        self._fields.remove(field)
+        return self
+
     # ------------------------------------------------------------------
     # Core helpers
     # ------------------------------------------------------------------

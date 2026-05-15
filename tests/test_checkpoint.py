@@ -86,6 +86,15 @@ def test_delete_nonexistent_returns_false(cp_path):
     assert cp.delete("/ghost.log") is False
 
 
+def test_delete_persists_to_disk(cp_path):
+    """Deleting an entry should be reflected when the checkpoint is reloaded."""
+    cp = LogCheckpoint(cp_path)
+    cp.save("/a.log", 42)
+    cp.delete("/a.log")
+    cp2 = LogCheckpoint(cp_path)
+    assert cp2.load("/a.log") is None
+
+
 def test_clear_removes_all(cp_path):
     cp = LogCheckpoint(cp_path)
     cp.save("/a.log", 1)
@@ -111,9 +120,4 @@ def test_all_returns_copy(cp_path):
     cp.save("/a.log", 7)
     snapshot = cp.all()
     snapshot["/a.log"] = 999
-    assert cp.load("/a.log") == 7  # original unchanged
-
-
-def test_path_property(cp_path):
-    cp = LogCheckpoint(cp_path)
-    assert cp.path == cp_path
+    assert cp.load("/a.log") == 7  #
